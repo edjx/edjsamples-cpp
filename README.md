@@ -14,13 +14,7 @@ deployed to EDJX network using EDJX CLI. More details on how to deploy via
 EDJX CLI can be found [in the EDJX Documentation](https://docs.edjx.io/docs/latest/how_tos/cli_build_wasm_file.html).
 
 It is also possible to build C++ applications into WASM executables manually
-using the following steps.
-
-## Clone This Repository
-
-Clone the this repository with all example code:
-
-    git clone https://github.com/edjx/edjsamples-cpp.git
+using the steps below.
 
 ## Directory Structure
 
@@ -37,21 +31,20 @@ example. Each application example contains these subdirectories:
 
 In order to build an application, the [EDJX C++ SDK](https://github.com/edjx/edjx-cpp-sdk)
 and the [WASI C++ SDK](https://github.com/WebAssembly/wasi-sdk) need to be
-installed.
+installed. The WASI SDK version should match the WASI version against which
+the EDJX C++ SDK library was compiled. For example, `edjx-cpp-sdk-*-wasi-12`
+should be used with [wasi-sdk-12](https://github.com/WebAssembly/wasi-sdk/releases/tag/wasi-sdk-12).
 
 ### Install the EDJX C++ SDK
 
-Download the SDK to `/opt/edjx-cpp-sdk`:
-
-    git clone --branch wasi-12 --depth 1 https://github.com/edjx/edjx-cpp-sdk.git /opt/edjx-cpp-sdk
-
-The `wasi-12` branch contains a build of the EDJX C++ SDK that was built
-with the WASI SDK version 12.
+Install the EDJX C++ SDK ([github.com/edjx/edjx-cpp-sdk](https://github.com/edjx/edjx-cpp-sdk))
+to `/opt/edjx-cpp-sdk` (so that the full path to the contained `lib/`
+directory is `/opt/edjx-cpp-sdk/lib/` and the full path to the `include/`
+directory is `/opt/edjx-cpp-sdk/include/`).
 
 It is possible to install the SDK to an arbitrary location. In that case,
-update the `INCLUDE_DIR` and `LIB_DIR` variables in the `Makefile`
-to point to `edjx-cpp-sdk/include` and `edjx-cpp-sdk/lib` in the custom
-location path.
+update the `INCLUDE_DIR` and `LIB_DIR` variables in the `Makefile` of an
+application to point to the custom locations.
 
 ### Install the WASI C++ SDK
 
@@ -62,9 +55,6 @@ Install the WASI SDK to `/opt/wasi-sdk/` (so that the path to the bundled
 compiler is `/opt/wasi-sdk/bin/clang++`). Use the same WASI
 SDK version that was used to build the EDJX C++ SDK library (e.g., use
 `wasi-sdk-12` when using the `wasi-12` version of the EDJX C++ SDK).
-
-    wget https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-12/wasi-sdk-12.0-linux.tar.gz
-    tar -xvf wasi-sdk-12.0-linux.tar.gz -C /opt
 
 It is possible to install the WASI SDK to
 a different location and then manually update the `WASI_SDK_PATH` variable in
