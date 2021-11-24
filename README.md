@@ -10,9 +10,8 @@ language: C++
 This repository contains EDJX's sample serverless functions written in C++.
 Each sample also contains a README, which has a detailed explanation about
 the specifics of the Serverless Function. These sample functions can be
-built and 'deployed to EDJX network' using EDJX CLI. More details on how to deploy via
+built and deployed to EDJX network using EDJX CLI. More details on how to deploy via
 EDJX CLI can be found [in the EDJX Documentation](https://docs.edjx.io/docs/latest/how_tos/cli_build_wasm_file.html).
-
 
 It is also possible to build C++ applications into WASM executables manually
 using the steps below.
