@@ -10,7 +10,7 @@ language: C++
 This repository contains EDJX's sample serverless functions written in C++.
 Each sample also contains a README, which has a detailed explanation about
 the specifics of the Serverless Function. These sample functions can be
-deployed to EDJX network using EDJX CLI. More details on how to deploy via
+built and deployed to EDJX network using EDJX CLI. More details on how to deploy via
 EDJX CLI can be found [in the EDJX Documentation](https://docs.edjx.io/docs/latest/how_tos/cli_build_wasm_file.html).
 
 It is also possible to build C++ applications into WASM executables manually
@@ -77,6 +77,10 @@ The resulting WASM file will be created in `<application>/bin/<app>.wasm`.
 To remove files created during the compilation, run:
 
     make clean
+
+## Deploy WASM files using EDJX Console
+
+WASM files can be be deployed to EDJX Network by using EDJX Console. More details on how to deploy via EDJX Console can be found [in the EDJX Documentation](https://docs.edjx.io/docs/latest/serverless/console_function_create.html). 
 
 ## A Note About WASI Imports
 
