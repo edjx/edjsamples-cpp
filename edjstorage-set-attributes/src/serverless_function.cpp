@@ -22,28 +22,6 @@ using edjx::http::HttpStatusCode;
 static const HttpStatusCode HTTP_STATUS_OK = 200;
 static const HttpStatusCode HTTP_STATUS_BAD_REQUEST = 400;
 
-HttpStatusCode to_http_status_code(StorageError e) {
-    switch (e) {
-        case StorageError::Success:
-            return 200;
-        case StorageError::EmptyContent:
-        case StorageError::MissingFileName:
-        case StorageError::MissingBucketID:
-        case StorageError::MissingAttributes:
-        case StorageError::InvalidAttributes:
-            return 400; //HTTP_STATUS_BAD_REQUEST;
-        case StorageError::ContentNotFound:
-        case StorageError::ContentDeleted:
-            return 404; //HTTP_STATUS_NOT_FOUND;
-        case StorageError::UnAuthorized:
-            return 403; //HTTP_STATUS_FORBIDDEN;
-        case StorageError::DeletedBucketID:
-        case StorageError::InternalError:
-        case StorageError::SystemError:
-            return 500; //HTTP_STATUS_INTERNAL_SERVER_ERROR;
-    }
-}
-
 std::optional<std::string> query_param_by_name(const HttpRequest & req, const std::string & param_name) {
     std::string uri = req.get_uri().as_string();
     std::vector<std::pair<std::string, std::string>> query_parsed;
@@ -126,7 +104,7 @@ HttpResponse serverless(const HttpRequest & req) {
     StorageError err = edjx::storage::set_attributes(put_res, bucket_id.value(), file_name.value(), new_attributes);
     if (err != StorageError::Success) {
         return HttpResponse(to_string(err))
-            .set_status(to_http_status_code(err));
+            .set_status(edjx::error::to_http_status_code(err));
     }
 
     info("Set Attributes Successful");
