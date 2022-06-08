@@ -37,10 +37,11 @@ should be used with [wasi-sdk-12](https://github.com/WebAssembly/wasi-sdk/releas
 
 ### Install the EDJX C++ SDK
 
-Install the EDJX C++ SDK ([github.com/edjx/edjx-cpp-sdk](https://github.com/edjx/edjx-cpp-sdk))
-to `/opt/edjx-cpp-sdk` (so that the full path to the contained `lib/`
-directory is `/opt/edjx-cpp-sdk/lib/` and the full path to the `include/`
-directory is `/opt/edjx-cpp-sdk/include/`).
+Install the [EDJX C++ SDK](https://github.com/edjx/edjx-cpp-sdk)
+to `edjx/edjx-cpp-sdk/` inside the user's home directory
+(so that the full path to the contained `lib/`
+directory is `~/edjx/edjx-cpp-sdk/lib/` and the full path to the `include/`
+directory is `~/edjx/edjx-cpp-sdk/include/`).
 
 It is possible to install the SDK to an arbitrary location. In that case,
 update the `INCLUDE_DIR` and `LIB_DIR` variables in the `Makefile` of an
@@ -48,11 +49,12 @@ application to point to the custom locations.
 
 ### Install the WASI C++ SDK
 
-WASI SDK ([github.com/WebAssembly/wasi-sdk](https://github.com/WebAssembly/wasi-sdk))
+The [WASI SDK](https://github.com/WebAssembly/wasi-sdk)
 provides the necessary C and C++ standard library functions.
 
-Install the WASI SDK to `/opt/wasi-sdk/` (so that the path to the bundled
-compiler is `/opt/wasi-sdk/bin/clang++`). Use the same WASI
+Install the WASI SDK to `edjx/wasi-sdk/` inside the user's home directory
+(so that the full path to the bundled
+compiler is `~/edjx/wasi-sdk/bin/clang++`). Use the same WASI
 SDK version that was used to build the EDJX C++ SDK library (e.g., use
 `wasi-sdk-12` when using the `wasi-12` version of the EDJX C++ SDK).
 
@@ -63,9 +65,20 @@ the one provided by the WASI SDK by editing the `CC` variable in the Makefile.
 However, to avoid any compatibility issues, we recommend using the clang
 compiler that comes bundled with the WASI SDK.
 
+### Install GNU Make
+
+Make sure that GNU Make is installed on your system and that it can be run by executing `make`. The following command should print `GNU Make` on the first line of its output.
+
+    make --version
+
 ## Build the Example Application
 
-Once the EDJX C++ SDK and the correct version of the WASI C++ SDK are installed,
+Clone this repository:
+
+    git clone https://github.com/edjx/edjsamples-cpp.git
+    cd edjsamples-cpp
+
+If the EDJX C++ SDK and the correct version of the WASI C++ SDK are installed,
 the example application can be compiled by running `make` inside the directory
 of each application:
 
