@@ -1,9 +1,9 @@
 # Root directory of WASI SDK
-WASI_SDK_PATH := /opt/wasi-sdk
+WASI_SDK_PATH := $(HOME)/edjx/wasi-sdk
 
 # Paths to headers and SDK library
-INCLUDE_DIR := /opt/edjx-cpp-sdk/include
-LIB_DIR := /opt/edjx-cpp-sdk/lib
+INCLUDE_DIR := $(HOME)/edjx/edjx-cpp-sdk/include
+LIB_DIR := $(HOME)/edjx/edjx-cpp-sdk/lib
 
 # Directories used by the project
 SRC_DIR := src/
