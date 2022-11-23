@@ -1,9 +1,14 @@
+# SDK versions that will be used for compilation
+# (CHANGE THE VERSION NUMBERS IF NEEDED)
+WASI_SDK_VERSION := 12.0
+EDJX_CPP_SDK_VERSION := v21.11.1-wasi-12
+
 # Root directory of WASI SDK
-WASI_SDK_PATH := $(HOME)/edjx/wasi-sdk
+WASI_SDK_PATH := $(HOME)/edjx/wasi-sdk-$(WASI_SDK_VERSION)
 
 # Paths to headers and SDK library
-INCLUDE_DIR := $(HOME)/edjx/edjx-cpp-sdk/include
-LIB_DIR := $(HOME)/edjx/edjx-cpp-sdk/lib
+INCLUDE_DIR := $(HOME)/edjx/edjx-cpp-sdk-$(EDJX_CPP_SDK_VERSION)/include
+LIB_DIR := $(HOME)/edjx/edjx-cpp-sdk-$(EDJX_CPP_SDK_VERSION)/lib
 
 # Directories used by the project
 SRC_DIR := src/
