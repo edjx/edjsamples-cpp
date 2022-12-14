@@ -56,7 +56,7 @@ std::optional<std::string> query_param_by_name(const HttpRequest & req, const st
                     break;
             }
         }
-        if (! name.empty() || ! value.empty()) {
+        if (!name.empty() || !value.empty()) {
             query_parsed.push_back(make_pair(name, value));
         }
 
@@ -73,17 +73,17 @@ std::optional<std::string> query_param_by_name(const HttpRequest & req, const st
 HttpResponse serverless(const HttpRequest & req) {
     info("Content Delete Flow");
 
-    // 1.Param(Required) : "file_name" -> name that will be given to uploading content
+    // 1. param (required): "file_name" -> name that will be given to the uploaded content
     std::optional<std::string> file_name = query_param_by_name(req, "file_name");
-    if (! file_name.has_value()) {
+    if (!file_name.has_value()) {
         error("No file_name found in query params of request");
         return HttpResponse("No file name found in query params of request")
             .set_status(HTTP_STATUS_BAD_REQUEST);
     };
 
-    // 2.Param(Required) : "bucket_id" ->  in which content will be uploaded
+    // 2. param (required): "bucket_id" -> in which bucket content will be uploaded
     std::optional<std::string> bucket_id = query_param_by_name(req, "bucket_id");
-    if (! bucket_id.has_value()) {
+    if (!bucket_id.has_value()) {
         error("No bucket id found in query params of request");
         return HttpResponse("No bucket id found in query params of request")
             .set_status(HTTP_STATUS_BAD_REQUEST);

@@ -141,7 +141,7 @@ std::string query_param_by_name(const HttpRequest & req, const std::string & par
                     break;
             }
         }
-        if (! name.empty() || ! value.empty()) {
+        if (!name.empty() || !value.empty()) {
             uri_parsed.push_back(make_pair(name, value));
         }
 

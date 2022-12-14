@@ -8,6 +8,7 @@
 using edjx::logger::info;
 using edjx::logger::error;
 using edjx::error::HttpError;
+using edjx::error::StreamError;
 using edjx::request::HttpRequest;
 using edjx::response::HttpResponse;
 using edjx::fetch::HttpFetch;
@@ -33,7 +34,15 @@ HttpResponse serverless(const HttpRequest & req) {
             .set_status(HTTP_STATUS_BAD_REQUEST);
     }
 
-    return HttpResponse(fetch_res.get_body())
+    std::vector<uint8_t> body;
+    StreamError s_err = fetch_res.read_body(body);
+    if (s_err != StreamError::Success) {
+        error(to_string(s_err));
+        return HttpResponse("failure in get_fetch_response: " + to_string(s_err))
+            .set_status(HTTP_STATUS_BAD_REQUEST);
+    }
+
+    return HttpResponse(body)
         .set_status(HTTP_STATUS_OK)
         .set_header("Serverless", "EDJX");
 }

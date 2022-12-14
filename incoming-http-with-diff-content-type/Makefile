@@ -1,7 +1,7 @@
 # SDK versions that will be used for compilation
 # (CHANGE THE VERSION NUMBERS IF NEEDED)
 WASI_SDK_VERSION := 12.0
-EDJX_CPP_SDK_VERSION := v21.11.1-wasi-12
+EDJX_CPP_SDK_VERSION := v22.12.1-wasi-12
 
 # Root directory of WASI SDK
 WASI_SDK_PATH := $(HOME)/edjx/wasi-sdk-$(WASI_SDK_VERSION)

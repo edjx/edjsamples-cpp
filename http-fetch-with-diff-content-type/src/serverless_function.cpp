@@ -14,6 +14,7 @@
 using edjx::logger::info;
 using edjx::logger::error;
 using edjx::error::HttpError;
+using edjx::error::StreamError;
 using edjx::http::Uri;
 using edjx::http::HttpMethod;
 using edjx::http::HttpStatusCode;
@@ -62,7 +63,7 @@ std::optional<std::string> query_param_by_name(const HttpRequest & req, const st
                     break;
             }
         }
-        if (! name.empty() || ! value.empty()) {
+        if (!name.empty() || !value.empty()) {
             query_parsed.push_back(make_pair(name, value));
         }
 
@@ -106,7 +107,15 @@ HttpResponse serverless(const HttpRequest & req) {
             .set_status(HTTP_STATUS_BAD_REQUEST);
     }
 
-    HttpResponse res(fetch_res.get_body());
+    std::vector<uint8_t> res_body;
+    StreamError s_err = fetch_res.read_body(res_body);
+    if (s_err != StreamError::Success) {
+        error(to_string(s_err));
+        return HttpResponse("failure in get_fetch_response: " + to_string(s_err))
+            .set_status(HTTP_STATUS_BAD_REQUEST);
+    }
+
+    HttpResponse res(res_body);
     res.set_status(HTTP_STATUS_OK);
     res.set_headers(fetch_res.get_headers());
     res.set_header("Serverless", "EDJX");

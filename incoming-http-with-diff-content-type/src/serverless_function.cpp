@@ -15,6 +15,7 @@ using edjx::http::HttpHeaders;
 using edjx::http::HttpStatusCode;
 using edjx::request::HttpRequest;
 using edjx::response::HttpResponse;
+using edjx::error::HttpError;
 
 static const HttpStatusCode HTTP_STATUS_OK = 200;
 static const HttpStatusCode HTTP_STATUS_BAD_REQUEST = 400;
@@ -128,15 +129,22 @@ std::optional<std::string> header_value(const HttpHeaders & headers, const std::
     return result;
 }
 
-HttpResponse serverless(const HttpRequest & req) {
+HttpResponse serverless(HttpRequest & req) {
     info("**Incoming HTTP with diff content type function**");
 
     switch (req.get_method()) {
         case HttpMethod::POST: {
             std::string content_type_header = header_value(req.get_headers(), "Content-Type").value_or("");
+            std::vector<uint8_t> incoming_req_body;
+            HttpError err = req.read_body(incoming_req_body);
+            if (err != HttpError::Success) {
+                return HttpResponse(to_string(err))
+                    .set_status(HTTP_STATUS_BAD_REQUEST)
+                    .set_header("Serverless", "EDJX")
+                    .set_header("Content-Type", "text/plain");
+            }
 
             if (content_type_header == "application/json") {
-                const std::vector<uint8_t> & incoming_req_body = req.get_body();
                 std::string body_str = edjx::utils::to_string(incoming_req_body);
 
                 if (!json_is_valid(body_str)) {
@@ -152,7 +160,6 @@ HttpResponse serverless(const HttpRequest & req) {
                     .set_header("Content-Type", "application/json");
             }
             else if (content_type_header == "text/plain") {
-                const std::vector<uint8_t> & incoming_req_body = req.get_body();
                 std::string body_str = edjx::utils::to_string(incoming_req_body);
 
                 std::string outgoing_body = "Modified By : Example Function " + body_str;
@@ -163,7 +170,6 @@ HttpResponse serverless(const HttpRequest & req) {
                     .set_header("Content-Type", "text/plain");
             }
             else if (content_type_header == "application/x-www-form-urlencoded") {
-                const std::vector<uint8_t> & incoming_req_body = req.get_body();
                 std::string body_str = edjx::utils::to_string(incoming_req_body);
 
                 std::string outgoing_body = insert_into_form(body_str, "Modified+By", "Example+Function");

@@ -53,7 +53,7 @@ std::optional<std::string> query_param_by_name(const HttpRequest & req, const st
                     break;
             }
         }
-        if (! name.empty() || ! value.empty()) {
+        if (!name.empty() || !value.empty()) {
             query_parsed.push_back(make_pair(name, value));
         }
 
