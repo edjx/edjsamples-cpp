@@ -20,9 +20,32 @@ static const HttpStatusCode HTTP_STATUS_OK = 200;
 static const HttpStatusCode HTTP_STATUS_BAD_REQUEST = 400;
 static const HttpStatusCode HTTP_STATUS_METHOD_NOT_ALLOWED = 405;
 
-std::string insert_into_json(const std::string & json, const std::string & name, const std::string & value) {
+// This helper function returns false if JSON is empty.
+// No further validation is performed.
+bool json_is_valid(const std::string & json) {
+    bool empty = true;
+
+    for (auto c : json) {
+        if (!isspace(c)) {
+            empty = false;
+        }
+    }
+
+    return !empty;
+}
+
+// This helper function inserts a "key":"value" pair at the beginning of a JSON.
+// It looks for an opening brace '{' and inserts the key:value pair after it.
+// It will append a comma ',' after the key:value pair if needed.
+// This function does not attempt to validate the JSON.
+std::string insert_into_json(
+    const std::string & json,
+    const std::string & name,
+    const std::string & value
+) {
     bool inserted = false;
     bool comma_inserted = false;
+    bool comma_not_needed = false;
 
     std::string result;
 
@@ -30,12 +53,14 @@ std::string insert_into_json(const std::string & json, const std::string & name,
         if (c == '{' && !inserted) {
             result += "{\"" + name + "\":\"" + value + "\"";
             inserted = true;
-        } else if (inserted && !comma_inserted) {
+        } else if (inserted && !comma_inserted && !comma_not_needed) {
             if (isspace(c)) {
                 continue;
             } else if (c != '}') {
                 result += ',';
                 comma_inserted = true;
+            } else {
+                comma_not_needed = true;
             }
             result += c;
         } else {
@@ -46,18 +71,25 @@ std::string insert_into_json(const std::string & json, const std::string & name,
     return result;
 }
 
-std::string insert_into_form(const std::string & form, const std::string & name, const std::string & value) {
+// This helper function appends a Name=Value pair at the beginning of
+// a URL-encoded form. The appended Name=Value pair must already
+// be in an encoded form.
+std::string insert_into_form(
+    const std::string & form,
+    const std::string & name,
+    const std::string & value
+) {
     std::string result = name + "=" + value;
 
     bool form_empty = true;
     for (char c : form) {
-        if (! isspace(c)) {
+        if (!isspace(c)) {
             form_empty = false;
             break;
         }
     }
 
-    if (! form_empty) {
+    if (!form_empty) {
         result += "&" + form;
     }
 
@@ -72,6 +104,7 @@ bool string_equal_nocase(const std::string & str1, const std::string & str2) {
     return str1.length() == str2.length() && std::equal(str1.begin(), str1.end(), str2.begin(), char_equal_nocase);
 }
 
+// This helper function gets values of an HTTP header.
 std::optional<std::string> header_value(const HttpHeaders & headers, const std::string & name) {
     std::optional<std::string> result = std::nullopt;
     bool first_entry = true;
@@ -106,6 +139,11 @@ HttpResponse serverless(const HttpRequest & req) {
                 const std::vector<uint8_t> & incoming_req_body = req.get_body();
                 std::string body_str = edjx::utils::to_string(incoming_req_body);
 
+                if (!json_is_valid(body_str)) {
+                    return HttpResponse("Request body must be a valid JSON")
+                        .set_status(HTTP_STATUS_BAD_REQUEST);
+                }
+
                 std::string outgoing_body = insert_into_json(body_str, "Modified By", "Example function");
 
                 return HttpResponse(outgoing_body)
@@ -128,7 +166,7 @@ HttpResponse serverless(const HttpRequest & req) {
                 const std::vector<uint8_t> & incoming_req_body = req.get_body();
                 std::string body_str = edjx::utils::to_string(incoming_req_body);
 
-                std::string outgoing_body = insert_into_form(body_str, "Modified%20By", "Example%20Function");
+                std::string outgoing_body = insert_into_form(body_str, "Modified+By", "Example+Function");
 
                 return HttpResponse(outgoing_body)
                     .set_status(HTTP_STATUS_OK)
