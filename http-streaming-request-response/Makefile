@@ -42,16 +42,16 @@ all: prerequisites directories $(TARGET_DIR)/$(TARGET)
 prerequisites: $(EDJX_CPP_SDK_PATH) $(INCLUDE_DIR) $(LIB_DIR) $(WASI_SDK_PATH)
 
 $(EDJX_CPP_SDK_PATH):
-	$(error Didn't find EDJX C++ SDK installed in $@)
+	$(error EDJX C++ SDK not found in $@. Install EDJX C++ SDK version $(EDJX_CPP_SDK_VERSION) or update the EDJX_CPP_SDK_PATH variable in the Makefile. See the EDJX documentation for the SDK installation instructions)
 
 $(INCLUDE_DIR):
-	$(error Didn't find EDJX C++ SDK include directory in $@)
+	$(error EDJX C++ SDK include directory not found in $@. Install EDJX C++ SDK version $(EDJX_CPP_SDK_VERSION) or update the INCLUDE_DIR variable in the Makefile. See the EDJX documentation for the SDK installation instructions)
 
 $(LIB_DIR):
-	$(error Didn't find EDJX C++ SDK lib directory in $@)
+	$(error EDJX C++ SDK lib directory not found in $@. Install EDJX C++ SDK version $(EDJX_CPP_SDK_VERSION) or update the LIB_DIR variable in the Makefile. See the EDJX documentation for the SDK installation instructions)
 
 $(WASI_SDK_PATH):
-	$(error Didn't find WASI SDK installed in $@)
+	$(error WASI SDK not found in $@. Install WASI SDK version $(WASI_SDK_VERSION) or update the WASI_SDK_PATH variable in the Makefile. See the EDJX documentation for the SDK installation instructions)
 
 .PHONY: directories
 directories: $(TARGET_DIR) $(BUILD_DIR)
