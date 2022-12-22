@@ -3,12 +3,13 @@
 WASI_SDK_VERSION := 12.0
 EDJX_CPP_SDK_VERSION := v22.12.1-wasi-12
 
-# Root directory of WASI SDK
+# Root directories of WASI and EDJX C++ SDKs
 WASI_SDK_PATH := $(HOME)/edjx/wasi-sdk-$(WASI_SDK_VERSION)
+EDJX_CPP_SDK_PATH := $(HOME)/edjx/edjx-cpp-sdk-$(EDJX_CPP_SDK_VERSION)
 
 # Paths to headers and SDK library
-INCLUDE_DIR := $(HOME)/edjx/edjx-cpp-sdk-$(EDJX_CPP_SDK_VERSION)/include
-LIB_DIR := $(HOME)/edjx/edjx-cpp-sdk-$(EDJX_CPP_SDK_VERSION)/lib
+INCLUDE_DIR := $(EDJX_CPP_SDK_PATH)/include
+LIB_DIR := $(EDJX_CPP_SDK_PATH)/lib
 
 # Directories used by the project
 SRC_DIR := src/
@@ -35,7 +36,22 @@ MKDIR_P := mkdir -p
 # ---------------------
 
 .PHONY: all
-all: directories $(TARGET_DIR)/$(TARGET)
+all: prerequisites directories $(TARGET_DIR)/$(TARGET)
+
+.PHONY: prerequisites
+prerequisites: $(EDJX_CPP_SDK_PATH) $(INCLUDE_DIR) $(LIB_DIR) $(WASI_SDK_PATH)
+
+$(EDJX_CPP_SDK_PATH):
+	$(error Didn't find EDJX C++ SDK installed in $@)
+
+$(INCLUDE_DIR):
+	$(error Didn't find EDJX C++ SDK include directory in $@)
+
+$(LIB_DIR):
+	$(error Didn't find EDJX C++ SDK lib directory in $@)
+
+$(WASI_SDK_PATH):
+	$(error Didn't find WASI SDK installed in $@)
 
 .PHONY: directories
 directories: $(TARGET_DIR) $(BUILD_DIR)
