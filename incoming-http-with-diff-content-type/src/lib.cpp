@@ -15,11 +15,11 @@ using edjx::http::HttpStatusCode;
 
 static const HttpStatusCode HTTP_STATUS_BAD_REQUEST = 400;
 
-extern HttpResponse serverless(const HttpRequest & req);
+extern HttpResponse serverless(HttpRequest & req);
 
 int main(void) {
     HttpRequest req;
-    HttpError err = HttpRequest::from_client(req, true);
+    HttpError err = HttpRequest::from_client(req);
     if (err != HttpError::Success) {
         error(edjx::error::to_string(err));
         HttpResponse().set_status(HTTP_STATUS_BAD_REQUEST).send();

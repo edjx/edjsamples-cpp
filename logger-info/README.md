@@ -7,4 +7,4 @@ language: C++
 
 # Log an Info Message
 
-This is a minimal function that logs a "Hello World!" information message.
+This is a minimal function that logs a **Hello World!** information message.

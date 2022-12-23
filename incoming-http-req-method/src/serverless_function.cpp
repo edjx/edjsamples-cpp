@@ -15,6 +15,7 @@ using edjx::http::HttpMethod;
 using edjx::http::Uri;
 using edjx::http::HttpStatusCode;
 using edjx::error::HttpError;
+using edjx::error::StreamError;
 
 static const HttpStatusCode HTTP_STATUS_OK = 200;
 static const HttpStatusCode HTTP_STATUS_BAD_REQUEST = 400;
@@ -62,7 +63,15 @@ HttpResponse serverless(const HttpRequest & req) {
             .set_status(HTTP_STATUS_BAD_REQUEST);
     }
 
-    HttpResponse res(fetch_res.get_body());
+    std::vector<uint8_t> body;
+    StreamError s_err = fetch_res.read_body(body);
+    if (s_err != StreamError::Success) {
+        error(to_string(s_err));
+        return HttpResponse("failure in get_fetch_response: " + to_string(s_err))
+            .set_status(HTTP_STATUS_BAD_REQUEST);
+    }
+
+    HttpResponse res(body);
     res.set_status(HTTP_STATUS_OK);
     res.set_headers(fetch_res.get_headers());
     res.set_header("Serverless", "EDJX");

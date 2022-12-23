@@ -40,7 +40,7 @@ HttpResponse serverless(const HttpRequest & req) {
     std::string auth_header_value;
     bool auth_header_first_value = true;
     for (const auto & value : auth_header_iterator->second) {
-        if (! auth_header_first_value) {
+        if (!auth_header_first_value) {
             auth_header_value += ",";
         }
         auth_header_value += value;
@@ -48,7 +48,7 @@ HttpResponse serverless(const HttpRequest & req) {
     }
 
     // Verify authorization token
-    if (! verify_auth_token(auth_header_value)) {
+    if (!verify_auth_token(auth_header_value)) {
         return HttpResponse("Authentication Error : Invalid auth token")
             .set_status(HTTP_STATUS_UNAUTHORIZED);
     }
